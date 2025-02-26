@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha seu Rockstar</title>
+</head>
+<body>
+    <h2>Escolha seu Rockstar Favorito</h2>
+    <label for="username">Seu nome:</label>
+    <input type="text" id="username" placeholder="Digite seu nome">
+
+    <label for="rockstar-list">Escolha um Rockstar:</label>
+    <select id="rockstar-list"></select>
+
+    <button onclick="salvarEscolha()">Salvar Escolha</button>
+
+    <script>
+        const rockstars = [
+            "Elvis Presley", "Chuck Berry", "Little Richard", "Buddy Holly", "Jerry Lee Lewis",
+            "John Lennon", "Paul McCartney", "George Harrison", "Ringo Starr",
+            "Mick Jagger", "Keith Richards", "Ronnie Wood", "Charlie Watts",
+            "Roger Daltrey", "Pete Townshend", "John Entwistle", "Keith Moon",
+            "Robert Plant", "Jimmy Page", "John Paul Jones", "John Bonham",
+            "David Gilmour", "Roger Waters", "Nick Mason", "Richard Wright",
+            "Freddie Mercury", "Brian May", "Roger Taylor", "John Deacon",
+            "Ozzy Osbourne", "Tony Iommi", "Geezer Butler", "Bill Ward",
+            "Axl Rose", "Slash", "Duff McKagan", "Izzy Stradlin", "Steven Adler",
+            "Steven Tyler", "Joe Perry", "Tom Hamilton", "Joey Kramer", "Brad Whitford",
+            "Kurt Cobain", "Krist Novoselic", "Dave Grohl",
+            "Eddie Vedder", "Mike McCready", "Stone Gossard", "Jeff Ament", "Matt Cameron",
+            "Chris Cornell", "Kim Thayil", "Ben Shepherd", "Matt Cameron",
+            "Layne Staley", "Jerry Cantrell", "Mike Inez", "Sean Kinney",
+            "Iggy Pop", "Ron Asheton", "Scott Asheton", "Dave Alexander",
+            "Joey Ramone", "Johnny Ramone", "Dee Dee Ramone", "Tommy Ramone",
+            "Johnny Rotten", "Sid Vicious", "Steve Jones", "Paul Cook",
+            "Joe Strummer", "Mick Jones", "Paul Simonon", "Topper Headon",
+            "Patti Smith", "Lenny Kaye", "Jay Dee Daugherty", "Ivan Kral",
+            "Joan Jett", "Kenny Laguna", "Thommy Price",
+            "Lita Ford", "Cherie Currie", "Sandy West", "Jackie Fox",
+            "Ann Wilson", "Nancy Wilson",
+            "Stevie Nicks", "Lindsey Buckingham", "Christine McVie", "Mick Fleetwood", "John McVie",
+            "Debbie Harry", "Chris Stein", "Clem Burke",
+            "Siouxsie Sioux", "Steven Severin", "Budgie", "John McGeoch",
+            "Chrissie Hynde", "Martin Chambers", "Pete Farndon", "James Honeyman-Scott",
+            "Shirley Manson", "Duke Erikson", "Steve Marker", "Butch Vig",
+            "Courtney Love", "Eric Erlandson", "Patty Schemel", "Melissa Auf der Maur",
+            "Donita Sparks", "Suzi Gardner", "Jennifer Finch", "Demetra Plakas",
+            "Skin", "Ace", "Cass", "Mark Richardson",
+            "Lzzy Hale", "Arejay Hale", "Joe Hottinger", "Josh Smith",
+            "Amy Lee", "Ben Moody", "Tim McCord", "Will Hunt", "Troy McLawhorn",
+            "Tarja Turunen", "Tuomas Holopainen", "Emppu Vuorinen",
+            "Sharon den Adel", "Robert Westerholt", "Ruud Jolie",
+            "Dolores O’Riordan", "Noel Hogan", "Mike Hogan", "Fergal Lawler",
+            "Hayley Williams", "Zac Farro", "Taylor York",
+            "Taylor Momsen", "Ben Phillips", "Jamie Perkins", "Mark Damon"
+        ];
+
+        function carregarLista() {
+            const lista = document.getElementById("rockstar-list");
+            lista.innerHTML = ""; // Limpa antes de adicionar
+
+            rockstars.forEach(nome => {
+                const option = document.createElement("option");
+                option.value = nome;
+                option.textContent = nome;
+                lista.appendChild(option);
+            });
+        }
+
+        function salvarEscolha() {
+            const nomeUsuario = document.getElementById("username").value;
+            const rockstarSelecionado = document.getElementById("rockstar-list").value;
+
+            if (nomeUsuario && rockstarSelecionado) {
+                alert(`${nomeUsuario} escolheu ${rockstarSelecionado}!`);
+                removerRockstar(rockstarSelecionado);
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        }
+
+        function removerRockstar(nome) {
+            const index = rockstars.indexOf(nome);
+            if (index !== -1) {
+                rockstars.splice(index, 1); // Remove da lista
+                carregarLista(); // Atualiza a lista na tela
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", carregarLista);
+    </script>
+</body>
+</html>
