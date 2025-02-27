@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rockstar Picker</title>
+    <style>
+        body {
+            background-color: #111;
+            color: gold;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        select, input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        select {
+            background: black;
+            color: gold;
+        }
+        input {
+            background: black;
+            color: gold;
+            border: 1px solid gold;
+        }
+        button {
+            background: gold;
+            color: black;
+            cursor: pointer;
+        }
+        button:hover {
+            background: darkgoldenrod;
+        }
+    </style>
+    <script>
+        async function loadList() {
+            const response = await fetch('rockstars.json');
+            const rockstars = await response.json();
+            const list = document.getElementById("rockstar-list");
+            list.innerHTML = "";
+            rockstars.forEach(name => {
+                const option = document.createElement("option");
+                option.value = name;
+                option.textContent = name;
+                list.appendChild(option);
+            });
+        }
+
+        async function saveChoice() {
+            const userName = document.getElementById("username").value;
+            const selectedRockstar = document.getElementById("rockstar-list").value;
+            
+            if (userName && selectedRockstar) {
+                await updateRockstars(userName, selectedRockstar);  // Chama a função do update.js
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadList);
+        window.saveChoice = saveChoice;
+    </script>
+    <script src="update.js"></script> <!-- Adicionando update.js -->
+</head>
+<body>
+    <h2>Pick Your Favorite Rockstar</h2>
+    <label for="username">Your Name:</label>
+    <input type="text" id="username" placeholder="Enter your name">
+
+    <label for="rockstar-list">Choose a Rockstar:</label>
+    <select id="rockstar-list"></select>
+
+    <button onclick="saveChoice()">Save Choice</button>
+</body>
+</html>
