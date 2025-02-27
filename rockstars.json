@@ -38,12 +38,26 @@
         }
     </style>
     <script>
+        const GITHUB_USER = "LidiClementino";  // Coloque seu usuário do GitHub
+        const REPO_NAME = "rockstar-picker";  // Coloque o nome do repositório
+        const FILE_PATH = "chosen_rockstars.json";
+        const TOKEN = "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";  // Coloque o seu token aqui
+
         async function loadList() {
             const response = await fetch('rockstars.json');
-            const rockstars = await response.json();
+            const allRockstars = await response.json();
+
+            const chosenResponse = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const chosenData = await chosenResponse.json();
+            const chosenRockstars = JSON.parse(atob(chosenData.content));
+
+            const availableRockstars = allRockstars.filter(name => !Object.values(chosenRockstars).includes(name));
+
             const list = document.getElementById("rockstar-list");
             list.innerHTML = "";
-            rockstars.forEach(name => {
+            availableRockstars.forEach(name => {
                 const option = document.createElement("option");
                 option.value = name;
                 option.textContent = name;
@@ -54,18 +68,47 @@
         async function saveChoice() {
             const userName = document.getElementById("username").value;
             const selectedRockstar = document.getElementById("rockstar-list").value;
-            
-            if (userName && selectedRockstar) {
-                await updateRockstars(userName, selectedRockstar);  // Chama a função do update.js
-            } else {
+
+            if (!userName || !selectedRockstar) {
                 alert("Please fill in all fields.");
+                return;
             }
+
+            const chosenResponse = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const chosenData = await chosenResponse.json();
+            const chosenRockstars = JSON.parse(atob(chosenData.content));
+
+            if (Object.values(chosenRockstars).includes(selectedRockstar)) {
+                alert("This rockstar is already taken!");
+                return;
+            }
+
+            chosenRockstars[userName] = selectedRockstar;
+
+            const updatedContent = btoa(JSON.stringify(chosenRockstars, null, 2));
+
+            await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `User ${userName} picked ${selectedRockstar}`,
+                    content: updatedContent,
+                    sha: chosenData.sha
+                })
+            });
+
+            alert(`${userName} chose ${selectedRockstar}!`);
+            loadList();
         }
 
         document.addEventListener("DOMContentLoaded", loadList);
         window.saveChoice = saveChoice;
     </script>
-    <script src="update.js"></script> <!-- Adicionando update.js -->
 </head>
 <body>
     <h2>Pick Your Favorite Rockstar</h2>
